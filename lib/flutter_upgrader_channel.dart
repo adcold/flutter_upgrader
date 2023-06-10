@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_upgrader/flutter_upgrader.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FlutterUpgradeChanneler {
   static const MethodChannel _channel = MethodChannel('flutter_upgrader');
@@ -57,5 +58,15 @@ class FlutterUpgradeChanneler {
     };
 
     return await _channel.invokeMethod('jumpMarket', map);
+  }
+  
+  //跳转到url路径
+  static jumpUrl (String url) async {
+    Uri  u = Uri.parse(url);
+    if (await canLaunchUrl(u)) {
+      await launchUrl(u, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
